@@ -53,9 +53,9 @@ async function fetchAllLevels() {
         const data = await response.json();
         console.log('API Response sample:', data[0]); // Log first level to see structure
         
-        // Filter for extreme demons (position <= 150 for manageable gameplay)
+        // Filter for extreme demons
         const extremeDemons = data
-            .filter(level => level.position && level.position <= 150)
+            .filter(level => level.position)
             .sort((a, b) => a.position - b.position)
             .map(level => {
                 // Try to extract video information from level data
@@ -390,5 +390,6 @@ restartGameButton.addEventListener('click', () => resetGame());
 // ================================
 // START THE GAME!
 // ================================
+
 
 window.addEventListener('DOMContentLoaded', initGame);
