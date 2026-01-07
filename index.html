@@ -1,0 +1,114 @@
+<!--Are you trying to cheat?-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GD: Higher or Lower</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Scores -->
+        <div class="top-header">
+            <div class="header-score">
+                <span class="score-label">HIGH SCORE</span>
+                <span id="highScore" class="score-value">0</span>
+            </div>
+            
+            <div class="header-title">
+                <h1>Geometry Dash: HIGHER LOWER</h1>
+                <p class="subtitle">Extreme Demon Difficulty Ranking According To AREDL</p>
+            </div>
+            
+            <div class="header-score">
+                <span class="score-label">SCORE</span>
+                <span id="score" class="score-value">0</span>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Left Image (Current Level) -->
+            <div class="image-container left-image-container" id="imageA">
+                <div class="level-info">
+                    <div class="level-name-large" id="nameA">...</div>
+                    <div class="level-rank-large" id="rankA">#?</div>
+                </div>
+                
+                <!-- YouTube overlay -->
+                <div id="videoOverlayA" class="youtube-overlay">
+                    <a href="#" target="_blank" class="youtube-button">
+                        <i class="fab fa-youtube"></i>
+                        <span>Watch Gameplay</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- VS Circle -->
+            <div class="vs-container">
+                <div class="vs-circle">
+                    <span class="vs-text">VS</span>
+                    <span class="vs-subtext">versus</span>
+                </div>
+            </div>
+
+            <!-- Right Image (Next Level) -->
+            <div class="image-container right-image-container" id="imageB">
+                <div class="level-info">
+                    <div class="level-name-large" id="nameB">...</div>
+                    <div class="level-rank-large" id="rankB">#?</div>
+                </div>
+
+                <!-- YouTube overlay -->
+                <div id="videoOverlayB" class="youtube-overlay">
+                    <a href="#" target="_blank" class="youtube-button">
+                        <i class="fab fa-youtube"></i>
+                        <span>Watch Gameplay</span>
+                    </a>
+                </div>
+
+                <!-- Game Controls - Directly on image -->
+                <div class="is-text" id="isText">Is</div>
+                
+                <!-- Choice Buttons -->
+                <div class="choice-buttons" id="questionElements">
+                    <button id="higherBtn" class="btn btn-higher">
+                        <span class="btn-main">HIGHER</span>
+                        <span class="btn-sub">(Harder - Lower #)</span>
+                    </button>
+                    
+                    <div class="or-text" id="orText">or</div>
+                    
+                    <button id="lowerBtn" class="btn btn-lower">
+                        <span class="btn-main">LOWER</span>
+                        <span class="btn-sub">(Easier - Higher #)</span>
+                    </button>
+                </div>
+                
+                <div class="than-text" id="thanText">
+                    than <span id="thanName" class="than-name">...</span>?
+                </div>
+                
+                <!-- Action Buttons -->
+                <button id="nextBtn" class="btn btn-next">
+                    NEXT LEVEL →
+                    <span class="btn-sub">(Continue)</span>
+                </button>
+                
+                <button id="restartGameBtn" class="btn btn-restart-game">
+                    ↻ PLAY AGAIN
+                    <span class="btn-sub">(Try to beat your high score)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
