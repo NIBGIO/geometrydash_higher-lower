@@ -1,6 +1,6 @@
 //Author: NIBGIO
 //Creation Date: 07.01.2026
-
+//Last Updated: 08.01.2026
 
 
 // ================================
@@ -187,6 +187,9 @@ function hideQuestionElements() {
 }
 
 async function startNewRound() {
+    // Clear any lingering highlights from the left card
+    rankElementA.classList.remove('correct-guess', 'incorrect-guess');
+
     if (isLoading) return;
 
     if (gameOver) {
@@ -281,12 +284,6 @@ function updateVideoLinks() {
 function checkGuess(guess) {
     if (gameOver || !currentLevel || !nextLevel) return;
 
-    // Reveal the hidden rank on the right card
-    rankElementB.textContent = `#${nextLevel.rank}`;
-
-    // Hide question elements after making a guess
-    hideQuestionElements();
-
     // Game logic
     let correctAnswer;
     
@@ -298,8 +295,21 @@ function checkGuess(guess) {
         correctAnswer = guess;
     }
 
+    const guessCorrect = (guess === correctAnswer);
+
+    // Hide question elements after making a guess
+    hideQuestionElements();
+
+    // Find the highest rank in the list (the easiest demon)
+    const highestRank = allLevels.length > 0 ? 
+        Math.max(...allLevels.map(level => level.rank)) : 
+        100; // fallback if allLevels not loaded yet
+
+    // Animate the rank with the correctness parameter
+    animateRankCount(rankElementB, nextLevel.rank, highestRank, guessCorrect);
+
     // Check if guess was correct
-    if (guess === correctAnswer) {
+    if (guessCorrect) {
         // CORRECT
         score++;
         scoreElement.textContent = score;
@@ -349,6 +359,90 @@ async function resetGame() {
 }
 
 // ================================
+// COUNT ANIMATION FUNCTION (COUNTING DOWN)
+// ================================
+
+// Function to clear rank highlights
+function clearRankHighlights() {
+    rankElementA.classList.remove('correct-guess', 'incorrect-guess');
+    rankElementB.classList.remove('correct-guess', 'incorrect-guess');
+
+    // Also remove rank-animate if it's still there
+    rankElementA.classList.remove('rank-animate');
+    rankElementB.classList.remove('rank-animate');
+}
+
+// Clear highlights when Next Level is clicked
+nextButton.addEventListener('click', () => {
+    clearRankHighlights();
+    startNewRound();
+});
+
+// Clear highlights when Restart Game is clicked  
+restartGameButton.addEventListener('click', () => {
+    clearRankHighlights();
+    resetGame();
+});
+
+function animateRankCount(element, finalRank, startRank, isCorrect) {
+    const duration = 1000;
+    const frameDuration = 1000 / 60;
+    const totalFrames = Math.round(duration / frameDuration);
+    let frame = 0;
+    
+    const counter = setInterval(() => {
+        frame++;
+        
+        const progress = frame / totalFrames;
+        const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+        const currentRank = Math.round(startRank - (startRank - finalRank) * easeOutProgress);
+        
+        element.textContent = `#${Math.max(currentRank, finalRank)}`;
+        
+        if (currentRank <= finalRank * 1.2 && currentRank > finalRank) {
+            element.style.transform = `translateX(${Math.sin(frame * 0.5) * 2}px)`;
+        } else {
+            element.style.transform = 'translateX(0)';
+        }
+        
+        // Stop animation when complete
+        if (frame === totalFrames) {
+            clearInterval(counter);
+            element.textContent = `#${finalRank}`;
+            element.style.transform = 'translateX(0)';
+            
+            // Force a reflow to restart the animation
+            void element.offsetWidth; // This triggers a reflow
+    
+            // Remove any existing classes and add the pop animation
+            element.classList.remove('rank-animate', 'correct-guess', 'incorrect-guess');
+    
+            // Add pop animation for correct guesses
+            if (isCorrect) {
+                element.classList.add('rank-animate');
+        
+            // Remove the pop animation class after it finishes
+                setTimeout(() => {
+                    element.classList.remove('rank-animate');
+                }, 400); // 400ms matches the animation duration
+    }
+            
+            // Add the new highlight classes
+            if (isCorrect) {
+                element.classList.add('correct-guess');
+            } else {
+                element.classList.add('incorrect-guess');
+            }
+
+            // Remove the pop animation class after it finishes (keep the color)
+            setTimeout(() => {
+                element.classList.remove('rank-animate');
+            }, 400); // 400ms equals the animation duration
+        }
+    }, frameDuration);
+}
+
+// ================================
 // INITIALIZATION
 // ================================
 
@@ -384,12 +478,9 @@ async function initGame() {
 
 higherButton.addEventListener('click', () => checkGuess('higher'));
 lowerButton.addEventListener('click', () => checkGuess('lower'));
-nextButton.addEventListener('click', () => startNewRound());
-restartGameButton.addEventListener('click', () => resetGame());
 
 // ================================
 // START THE GAME!
 // ================================
-
 
 window.addEventListener('DOMContentLoaded', initGame);
